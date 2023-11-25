@@ -13,7 +13,7 @@ JoinPredicate *HashEquiJoin::getJoinPredicate() {
 
 const TupleDesc &HashEquiJoin::getTupleDesc() const {
     // TODO pa3.1: some code goes here
-    return this->getTupleDesc();
+    return TupleDesc::merge(child1->getTupleDesc(), child2->getTupleDesc());
 }
 
 std::string HashEquiJoin::getJoinField1Name() {

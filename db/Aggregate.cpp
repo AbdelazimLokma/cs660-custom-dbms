@@ -23,7 +23,7 @@ int Aggregate::groupField() {
 std::string Aggregate::groupFieldName() {
     // TODO pa3.2: some code goes here
     if (gfield == -1){
-        return std::nullopt;
+        return nullptr;
     }
     return child->getTupleDesc().getFieldName(gfield);
 }
@@ -55,6 +55,15 @@ void Aggregate::rewind() {
 
 const TupleDesc &Aggregate::getTupleDesc() const {
     // TODO pa3.2: some code goes here
+    if (gfield == -1){
+        TupleDesc td = TupleDesc({child->getTupleDesc().getFieldType(afield)}, {child->getTupleDesc().getFieldName(afield)});
+        return td;
+    }
+    else{
+        TupleDesc td = TupleDesc({child->getTupleDesc().getFieldType(gfield),child->getTupleDesc().getFieldType(afield)}, {child->getTupleDesc().getFieldName(gfield),child->getTupleDesc().getFieldName(afield)});
+        return td;
+    }
+
 }
 
 void Aggregate::close() {
@@ -64,10 +73,14 @@ void Aggregate::close() {
 
 std::vector<DbIterator *> Aggregate::getChildren() {
     // TODO pa3.2: some code goes here
-    return {child};
+    std::vector<DbIterator *> children;
+    children.push_back(child);
+    return children;
 }
 
 void Aggregate::setChildren(std::vector<DbIterator *> children) {
     // TODO pa3.2: some code goes here
-    child = children[0];
+    if (!children.empty()) {
+        child = children[0];
+    }
 }
