@@ -10,6 +10,8 @@ namespace db {
  */
     class Filter : public Operator {
         // TODO pa3.1: add private members
+        Predicate p; 
+        DbIterator *child; 
     protected:
         /**
          * AbstractDbIterator *.readNext implementation. Iterates over tuples from the
