@@ -26,6 +26,9 @@ void Delete::close() {
 
 void Delete::rewind() {
     // TODO pa3.3: some code goes here
+    if(!child){
+        throw; //Illegal State exception;
+    }
     child->rewind();
 }
 
