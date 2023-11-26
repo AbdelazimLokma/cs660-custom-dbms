@@ -6,10 +6,15 @@ using namespace db;
 
 std::optional<Tuple> Aggregate::fetchNext() {
     // TODO pa3.2: some code goes here
+    if (!child->hasNext()) {
+    }
+    Tuple nextTuple = child->next();
+
 }
 
 Aggregate::Aggregate(DbIterator *child, int afield, int gfield, Aggregator::Op aop): child(child), afield(afield), gfield(gfield), aop(aop) {
     // TODO pa3.2: some code goes here
+
 }
 
 int Aggregate::groupField() {
@@ -73,9 +78,7 @@ void Aggregate::close() {
 
 std::vector<DbIterator *> Aggregate::getChildren() {
     // TODO pa3.2: some code goes here
-    std::vector<DbIterator *> children;
-    children.push_back(child);
-    return children;
+    return {child};
 }
 
 void Aggregate::setChildren(std::vector<DbIterator *> children) {

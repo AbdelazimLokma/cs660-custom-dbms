@@ -11,6 +11,10 @@ namespace db {
  */
     class IntegerAggregator : public Aggregator {
         // TODO pa3.2: add private members
+        int gbfield;
+        std::optional<Types::Type> gbfieldtype;
+        int afield;
+        Op what;
     public:
         /**
          * Aggregate constructor

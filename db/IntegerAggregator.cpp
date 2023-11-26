@@ -6,6 +6,8 @@ using namespace db;
 class IntegerAggregatorIterator : public DbIterator {
 private:
     // TODO pa3.2: some code goes here
+
+
 public:
     IntegerAggregatorIterator(int gbfield,
                               const TupleDesc &td,
@@ -39,7 +41,7 @@ public:
 };
 
 IntegerAggregator::IntegerAggregator(int gbfield, std::optional<Types::Type> gbfieldtype, int afield,
-                                     Aggregator::Op what) {
+                                     Aggregator::Op what) : gbfield(gbfield), gbfieldtype(gbfieldtype), afield(afield), what(what){
     // TODO pa3.2: some code goes here
 }
 
