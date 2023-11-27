@@ -12,6 +12,8 @@ namespace db {
      * The common interface for any class that can compute an aggregate over a
      * list of Tuples.
      */
+
+
     class Aggregator {
     public:
         enum class Op {

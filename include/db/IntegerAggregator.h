@@ -41,7 +41,7 @@ namespace db {
          *            the Tuple containing an aggregate field and a group-by field
          */
         void mergeTupleIntoGroup(Tuple *tup) override;
-
+//
         /**
          * Create a DbIterator * over group aggregate results.
          *
