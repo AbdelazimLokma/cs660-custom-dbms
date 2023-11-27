@@ -9,9 +9,8 @@ private:
 
 
 public:
-    IntegerAggregatorIterator(int gbfield,
-                              const TupleDesc &td,
-                              const std::unordered_map<Field *, int> &count) {
+    IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count)
+    {
         // TODO pa3.2: some code goes here
     }
 

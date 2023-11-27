@@ -21,17 +21,19 @@ const TupleDesc &Filter::getTupleDesc() const {
 
 void Filter::open() {
     // TODO pa3.1: some code goes here
-    this->child.
-
+    Operator::open();
+    child->open();
 }
 
 void Filter::close() {
     // TODO pa3.1: some code goes here
     Operator::close();
+    child->close();
 }
 
 void Filter::rewind() {
     // TODO pa3.1: some code goes here
+    Operator::rewind();
     child->rewind();
 }
 
@@ -51,10 +53,11 @@ void Filter::setChildren(std::vector<DbIterator *> children) {
 
 std::optional<Tuple> Filter::fetchNext() {
     // TODO pa3.1: some code goes here
-    while(child->hasNext()){
+    while(child->hasNext()) {
+
         Tuple tuple = child->next();
-        if (p.filter(tuple)){
-            return tuple;  
+        if (p.filter(tuple)) {
+            return tuple;
         }
     }
     return std::nullopt;
