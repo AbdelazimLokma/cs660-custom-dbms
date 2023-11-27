@@ -7,6 +7,7 @@ using namespace db;
 std::optional<Tuple> Aggregate::fetchNext() {
     // TODO pa3.2: some code goes here
     if (!child->hasNext()) {
+        return std::nullopt;
     }
     Tuple nextTuple = child->next();
 

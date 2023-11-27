@@ -7,15 +7,19 @@ using namespace db;
 std::optional<Tuple> Insert::fetchNext() {
     // TODO pa3.3: some code goes here
     int counter = 0;
+    BufferPool &bufferpool = Database::getBufferPool();
     while (child->hasNext()) {
         Tuple t = child->next();
-        Database::getBufferPool().insertTuple(this->t, this->tableId, &t);
+        bufferpool.insertTuple(this->t, this->tableId, &t);
         counter++;
     }
-    TupleDesc td = TupleDesc({Types::INT_TYPE}, {"Count"});
-    Tuple ret = Tuple(td);
-    ret.setField(0, reinterpret_cast<const Field *>(counter)); //TODO: is it ok to cast an int to a field object type
-    return ret;
+    if (counter > 0){
+        Tuple newTuple(getTupleDesc());
+        newTuple.setField(0, new IntField(counter));
+        return newTuple;
+    }else{
+        return std::nullopt; //TODO: how do we know when to return NULL?
+    }
 }
 
 Insert::Insert(TransactionId t, DbIterator *child, int tableId) : t(t), child(child), tableId(tableId) {

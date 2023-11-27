@@ -1,4 +1,6 @@
 #include <db/Filter.h>
+#include "db/DbFile.h"
+#include "db/Database.h"
 
 using namespace db;
 
@@ -19,12 +21,13 @@ const TupleDesc &Filter::getTupleDesc() const {
 
 void Filter::open() {
     // TODO pa3.1: some code goes here
-    child->open();
+    this->child.
+
 }
 
 void Filter::close() {
     // TODO pa3.1: some code goes here
-    child->close();
+    Operator::close();
 }
 
 void Filter::rewind() {
