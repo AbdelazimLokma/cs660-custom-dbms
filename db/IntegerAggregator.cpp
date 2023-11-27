@@ -9,13 +9,11 @@ private:
     // TODO pa3.2: some code goes here
     std::unordered_map<Field*, int> count = std::unordered_map<Field *, int>();
     std::unordered_map<Field*, int> groupSum = std::unordered_map<Field *, int>();
+    Aggregator::Op what;
 
 public:
-    IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count, std::unordered_map<Field*, int> &groupSum, Aggregator::Op what)
-            (int gbfield, const TupleDesc &td,
-    const std::unordered_map<Field *, int> &count,
-            std::unordered_map<Field *, int> &groupSum, Aggregator::Op what)
-    : count(count), groupSum(groupSum), what(what),  {
+    IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count, std::unordered_map<Field *, int> &groupSum, Aggregator::Op what)
+    : count(count), groupSum(groupSum), what(what) {
         // Initialization goes here
     }{
 
