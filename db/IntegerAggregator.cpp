@@ -6,7 +6,8 @@ using namespace db;
 class IntegerAggregatorIterator : public DbIterator {
 private:
     // TODO pa3.2: some code goes here
-
+    std::unordered_map<Field*, int> groupCount = std::unordered_map<Field *, int>();
+    std::unordered_map<Field*, int> groupSum = std::unordered_map<Field *, int>();
 
 public:
     IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count)
