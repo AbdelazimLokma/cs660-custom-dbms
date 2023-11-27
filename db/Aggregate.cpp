@@ -51,11 +51,13 @@ Aggregator::Op Aggregate::aggregateOp() {
 
 void Aggregate::open() {
     // TODO pa3.2: some code goes here
+    Operator::open();
     child->open();
 }
 
 void Aggregate::rewind() {
     // TODO pa3.2: some code goes here
+    Operator::rewind();
     child->rewind();
 }
 
@@ -74,6 +76,7 @@ const TupleDesc &Aggregate::getTupleDesc() const {
 
 void Aggregate::close() {
     // TODO pa3.2: some code goes here
+    Operator::close();
     child->close();
 }
 

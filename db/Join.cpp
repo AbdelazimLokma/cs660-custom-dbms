@@ -67,15 +67,14 @@ std::optional<Tuple> Join::fetchNext() {
         while (child2->hasNext()) {
             Tuple t2 = child2->next();
             if (p->filter(&t1, &t2)) {
-               TupleDesc td = this->getTupleDesc();
-               auto newTuple = std::make_unique<Tuple>(td, nullptr);  //Still need to include recordID
+               Tuple newTuple = Tuple(td, nullptr);  //Still need to include recordID
                for(auto i = 0; i < t1.getTupleDesc().numFields(); i++){
-                    newTuple->setField(i, &t1.getField(i));
+                    newTuple.setField(i, &t1.getField(i));
                }
                for(auto i = 0; i < t2.getTupleDesc().numFields(); i++){
-                    newTuple->setField(t1.getTupleDesc().numFields() + i, &t2.getField(i));
+                    newTuple.setField(t1.getTupleDesc().numFields() + i, &t2.getField(i));
                }
-               return *newTuple;
+               return newTuple;
             }
         }
         child2->rewind();

@@ -54,7 +54,6 @@ void Filter::setChildren(std::vector<DbIterator *> children) {
 std::optional<Tuple> Filter::fetchNext() {
     // TODO pa3.1: some code goes here
     while(child->hasNext()) {
-
         Tuple tuple = child->next();
         if (p.filter(tuple)) {
             return tuple;
