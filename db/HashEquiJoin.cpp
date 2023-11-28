@@ -30,18 +30,21 @@ std::string HashEquiJoin::getJoinField2Name() {
 
 void HashEquiJoin::open() {
     // TODO pa3.1: some code goes here
+    Operator::open();
     child1->open();
     child2->open();
 }
 
 void HashEquiJoin::close() {
     // TODO pa3.1: some code goes here
+    Operator::close();
     child1->close(); 
     child2->close();
 }
 
 void HashEquiJoin::rewind() {
     // TODO pa3.1: some code goes here
+    Operator::rewind();
     child1->rewind(); 
     child2->rewind();
 }
