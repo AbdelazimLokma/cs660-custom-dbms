@@ -7,37 +7,76 @@ using namespace db;
 class IntegerAggregatorIterator : public DbIterator {
 private:
     // TODO pa3.2: some code goes here
-    std::unordered_map<Field*, int> count = std::unordered_map<Field *, int>();
-    std::unordered_map<Field*, int> groupSum = std::unordered_map<Field *, int>();
+    std::unordered_map<Field*, int> count;
+    std::unordered_map<Field*, int> groupSum;
     Aggregator::Op what;
+    int gbfield;
+    std::unordered_map<Field*, int>::iterator current;
+    TupleDesc td;
+    Tuple tuple;
 
 public:
     IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count, std::unordered_map<Field *, int> &groupSum, Aggregator::Op what)
-    : count(count), groupSum(groupSum), what(what) {
+    : count(count), groupSum(groupSum), what(what), gbfield(gbfield), td(td) {
         // Initialization goes here
-    }{
-
-        // TODO pa3.2: some code goes here
+        this->tuple = Tuple(td, nullptr);
     }
+    // TODO pa3.2: some code goes here
+
 
     void open() override {
         // TODO pa3.2: some code goes here
+        current = count.begin();
     }
 
     bool hasNext() override {
         // TODO pa3.2: some code goes here
+        return current != count.end();
     }
 
     Tuple next() override {
         // TODO pa3.2: some code goes here
+        if (!hasNext()){
+            throw std::runtime_error("No elements");
+        }
+        Field* currentKey = current->first;
+        int aggregateVal = groupSum[currentKey];
+        int countValue = count[currentKey];
+        int resultValue = 0;
+
+        switch(what){
+            case Aggregator::Op::SUM:
+            case Aggregator::Op::MIN:
+            case Aggregator::Op::MAX:
+                resultValue = aggregateVal;
+                break;
+            case Aggregator::Op::COUNT:
+                resultValue = countValue;
+            case Aggregator::Op::AVG:
+                if (countValue != 0){
+                    resultValue = aggregateVal / countValue;
+                }else {
+                    resultValue = 0;
+                }
+        }
+        if(gbfield == -1){
+            tuple.setField(0, (const IntField*)resultValue);
+        }else{
+            tuple.setField(0, (const IntField*)currentKey);
+            tuple.setField(1, (const IntField*)resultValue);
+        }
+        current++;
+        return tuple;
     }
 
     void rewind() override {
         // TODO pa3.2: some code goes here
+        current = count.begin();
     }
 
     const TupleDesc &getTupleDesc() const override {
         // TODO pa3.2: some code goes here
+        return td;
     }
 
     void close() override {
