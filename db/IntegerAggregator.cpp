@@ -13,13 +13,11 @@ private:
     int gbfield;
     std::unordered_map<Field*, int>::iterator current;
     TupleDesc td;
-    Tuple tuple;
 
 public:
     IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count, std::unordered_map<Field *, int> &groupSum, Aggregator::Op what)
     : count(count), groupSum(groupSum), what(what), gbfield(gbfield), td(td) {
         // Initialization goes here
-        this->tuple = Tuple(td, nullptr);
     }
     // TODO pa3.2: some code goes here
 
@@ -59,6 +57,7 @@ public:
                     resultValue = 0;
                 }
         }
+        Tuple tuple = Tuple(td, nullptr);
         if(gbfield == -1){
             tuple.setField(0, (const IntField*)resultValue);
         }else{
