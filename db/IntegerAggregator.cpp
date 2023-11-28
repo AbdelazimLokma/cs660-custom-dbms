@@ -1,5 +1,6 @@
 #include <db/IntegerAggregator.h>
 #include <db/IntField.h>
+#include <climits>
 
 
 using namespace db;
@@ -106,7 +107,7 @@ void IntegerAggregator::mergeTupleIntoGroup(Tuple *tup) {
     }
 
     if (groupSum.find(groupByField) == groupSum.end()) {
-        groupSum[groupByField] = (what == Op::MIN) ? INT_MAX : 0; //need to add min
+        groupSum[groupByField] = (what == Op::MIN) ? INT_MAX : 0;
     }
     int tupleValue = ((IntField&)tup->getField(afield)).getValue();
     switch (what) {
@@ -125,7 +126,6 @@ void IntegerAggregator::mergeTupleIntoGroup(Tuple *tup) {
             }
             break;
         case Op::COUNT:
-            // Count is already handled above
             break;
     }
 
