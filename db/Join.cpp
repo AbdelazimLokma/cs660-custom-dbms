@@ -62,32 +62,29 @@ void Join::setChildren(std::vector<DbIterator *> children) {
 
 std::optional<Tuple> Join::fetchNext() {
     // TODO pa3.1: some code goes here
-    if(t1 == nullptr){
+    while (t1 != std::nullopt || child1->hasNext()) {
 
-    }
+        if (t1 == std::nullopt) {
+            t1 = child1->next();
+        }
 
-    while (child1->hasNext()) {
         while (child2->hasNext()) {
-            if(!child2->hasNext()){
-                Tuple t1 = child1->next();
-                child2->rewind();
-            }else{
-                Tuple t1 = child1->next();
-            }
             Tuple t2 = child2->next();
-            if (p->filter(&t1, &t2)) {
+            if (p->filter(&t1.value(), &t2)) {
                Tuple newTuple = Tuple(td, nullptr);  //Still need to include recordID
-               for(auto i = 0; i < t1.getTupleDesc().numFields(); i++){
-                    newTuple.setField(i, &t1.getField(i));
+               for(auto i = 0; i < t1->getTupleDesc().numFields(); i++){
+                    newTuple.setField(i, &t1->getField(i));
                }
                for(auto i = 0; i < t2.getTupleDesc().numFields(); i++){
-                    newTuple.setField(t1.getTupleDesc().numFields() + i, &t2.getField(i));
+                    newTuple.setField(t1->getTupleDesc().numFields() + i, &t2.getField(i));
                }
-               child2++;
                return newTuple;
             }
         }
         child2->rewind();
+        t1 = std::nullopt;
     }
     return std::nullopt;
 }
+
+
