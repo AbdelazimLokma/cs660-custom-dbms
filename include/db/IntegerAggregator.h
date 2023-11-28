@@ -15,6 +15,8 @@ namespace db {
         std::optional<Types::Type> gbfieldtype;
         int afield;
         Op what;
+        std::unordered_map<Field*, int> count;
+        std::unordered_map<Field*, int> groupSum;
     public:
         /**
          * Aggregate constructor
