@@ -17,7 +17,6 @@ private:
 public:
     IntegerAggregatorIterator(int gbfield, const TupleDesc &td, const std::unordered_map<Field *, int> &count, std::unordered_map<Field *, int> &groupSum, Aggregator::Op what)
     : count(count), groupSum(groupSum), what(what), gbfield(gbfield), td(td) {
-
     }
     // TODO pa3.2: some code goes here
 
@@ -134,6 +133,8 @@ void IntegerAggregator::mergeTupleIntoGroup(Tuple *tup) {
 
 DbIterator *IntegerAggregator::iterator() const {
     // TODO pa3.2: some code goes here
-    auto td = gbfield != NO_GROUPING ? TupleDesc({Types::INT_TYPE, Types::INT_TYPE},{"groups", "aggregate"}) :  TupleDesc({Types::INT_TYPE},{"aggregate"});
-    return new IntegerAggregatorIterator();
+    auto td = gbfield != NO_GROUPING ? TupleDesc({Types::INT_TYPE, Types::INT_TYPE}, {"groups", "aggregate"}) : TupleDesc({Types::INT_TYPE}, {"aggregate"});
+    auto countCopy = count;
+    auto groupSumCopy = groupSum;
+    return new IntegerAggregatorIterator(gbfield, td, countCopy, groupSumCopy, what);
 }
