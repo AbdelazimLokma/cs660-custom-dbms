@@ -67,7 +67,7 @@ std::optional<Tuple> HashEquiJoin::fetchNext() {
 
         while (child2->hasNext()) {
             Tuple t2 = child2->next();
-            if (p->filter(&t1.value(), &t2)) {
+            if (p.filter(&t1.value(), &t2)) {
                 Tuple newTuple = Tuple(td, nullptr);  //Still need to include recordID
                 for(auto i = 0; i < t1->getTupleDesc().numFields(); i++){
                     newTuple.setField(i, &t1->getField(i));
