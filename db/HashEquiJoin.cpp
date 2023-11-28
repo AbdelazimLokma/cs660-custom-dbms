@@ -4,6 +4,7 @@ using namespace db;
 
 HashEquiJoin::HashEquiJoin(JoinPredicate p, DbIterator *child1, DbIterator *child2): p(p), child1(child1), child2(child2) {
     // TODO pa3.1: some code goes here
+    td = TupleDesc::merge(child1->getTupleDesc(), child2->getTupleDesc());
 }
 
 JoinPredicate *HashEquiJoin::getJoinPredicate() {
@@ -13,7 +14,7 @@ JoinPredicate *HashEquiJoin::getJoinPredicate() {
 
 const TupleDesc &HashEquiJoin::getTupleDesc() const {
     // TODO pa3.1: some code goes here
-    return TupleDesc::merge(child1->getTupleDesc(), child2->getTupleDesc());
+    return td;
 }
 
 std::string HashEquiJoin::getJoinField1Name() {
@@ -58,22 +59,27 @@ void HashEquiJoin::setChildren(std::vector<DbIterator *> children) {
 
 std::optional<Tuple> HashEquiJoin::fetchNext() {
     // TODO pa3.1: some code goes here
-    while (child1->hasNext()) {
-        Tuple t1 = child1->next();
+    while (t1 != std::nullopt || child1->hasNext()) {
+
+        if (t1 == std::nullopt) {
+            t1 = child1->next();
+        }
+
         while (child2->hasNext()) {
             Tuple t2 = child2->next();
-            if (p.filter(&t1, &t2)) {
-               Tuple newTuple = Tuple(this->getTupleDesc());  //Still need to include recordID
-               for(auto i = 0; i < t1.getTupleDesc().numFields(); i++){
-                    newTuple.setField(i, &t1.getField(i)); 
-               }
-               for(auto i = 0; i < t2.getTupleDesc().numFields(); i++){
-                    newTuple.setField(t1.getTupleDesc().numFields() + i, &t2.getField(i)); 
-               }
-               return newTuple; 
+            if (p->filter(&t1.value(), &t2)) {
+                Tuple newTuple = Tuple(td, nullptr);  //Still need to include recordID
+                for(auto i = 0; i < t1->getTupleDesc().numFields(); i++){
+                    newTuple.setField(i, &t1->getField(i));
+                }
+                for(auto i = 0; i < t2.getTupleDesc().numFields(); i++){
+                    newTuple.setField(t1->getTupleDesc().numFields() + i, &t2.getField(i));
+                }
+                return newTuple;
             }
         }
         child2->rewind();
+        t1 = std::nullopt;
     }
     return std::nullopt;
 }
