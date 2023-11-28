@@ -35,7 +35,7 @@ public:
     Tuple next() override {
         // TODO pa3.2: some code goes here
         if (!hasNext()){
-            throw std::runtime_error("No elements");
+            throw std::runtime_error("No elements left");
         }
         Field* currentKey = current->first;
         int aggregateVal = groupSum[currentKey];
@@ -80,6 +80,7 @@ public:
 
     void close() override {
         // TODO pa3.2: some code goes here
+        current = count.end();
     }
 };
 
@@ -90,28 +91,42 @@ IntegerAggregator::IntegerAggregator(int gbfield, std::optional<Types::Type> gbf
 
 void IntegerAggregator::mergeTupleIntoGroup(Tuple *tup) {
     // TODO pa3.2: some code goes here
-    Field* groupValue;
-    auto* aggValue = const_cast<Field*>(&tup->getField(afield));
-    if (gbfield == -1){
-        groupValue = nullptr;
-
-
-    }
-    else{
-        groupValue = const_cast<Field*>(&tup->getField(gbfield));
-    }
-
-
-    if (what == Op::MAX){
-
-    }
-    else if (what == Op::MIN){
-
-    }
-    else{
-
-    }
-
+//    Field* groupByField = nullptr;
+//    if(gbfield != -1){
+//        groupByField = const_cast<Field*>(&tup->getField(gbfield));
+//    }
+//    IntField tupleValue = const_cast<Field*>(tup->getField(afield));
+//
+//    IntegerAggregatorIterator it = IntegerAggregatorIterator();
+//
+//    if(count.find(groupByField) == count.end()) {
+//        count[groupByField] = 1; // Initialize count for this group
+//    } else {
+//        count[groupByField]++;
+//    }
+//
+//    if (groupSum.find(groupByField) == groupSum.end()) {
+//        groupSum[groupByField] = (what == Op::MIN) ? INT_MAX : 0; //need to add min
+//    }
+//    switch (what) {
+//        case Op::SUM:
+//        case Op::AVG:
+//            groupSum[groupByField] += tupleValue;
+//            break;
+//        case Op::MAX:
+//            if (tupleValue > groupSum[groupByField]) {
+//                groupSum[groupByField] = tupleValue;
+//            }
+//            break;
+//        case Op::MIN:
+//            if (tupleValue < groupSum[groupByField]) {
+//                groupSum[groupByField] = tupleValue;
+//            }
+//            break;
+//        case Op::COUNT:
+//            // Count is already handled above
+//            break;
+//    }
 
 }
 

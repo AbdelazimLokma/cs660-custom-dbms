@@ -62,9 +62,18 @@ void Join::setChildren(std::vector<DbIterator *> children) {
 
 std::optional<Tuple> Join::fetchNext() {
     // TODO pa3.1: some code goes here
+    if(t1 == nullptr){
+
+    }
+
     while (child1->hasNext()) {
-        Tuple t1 = child1->next();
         while (child2->hasNext()) {
+            if(!child2->hasNext()){
+                Tuple t1 = child1->next();
+                child2->rewind();
+            }else{
+                Tuple t1 = child1->next();
+            }
             Tuple t2 = child2->next();
             if (p->filter(&t1, &t2)) {
                Tuple newTuple = Tuple(td, nullptr);  //Still need to include recordID
@@ -74,6 +83,7 @@ std::optional<Tuple> Join::fetchNext() {
                for(auto i = 0; i < t2.getTupleDesc().numFields(); i++){
                     newTuple.setField(t1.getTupleDesc().numFields() + i, &t2.getField(i));
                }
+               child2++;
                return newTuple;
             }
         }
