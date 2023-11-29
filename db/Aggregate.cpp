@@ -9,13 +9,23 @@ std::optional<Tuple> Aggregate::fetchNext() {
     if (!child->hasNext()) {
         return std::nullopt;
     }
-    Tuple nextTuple = child->next();
-
+    while(child->hasNext()){
+        Tuple nextTuple = child->next();
+        agg.mergeTupleIntoGroup(&nextTuple);
+    }
+    DbIterator *aggIterator = agg.iterator();
+    aggIterator->open();
+    if (!aggIterator->hasNext()) {
+        aggIterator->close();
+        return std::nullopt;
+    }
+    Tuple result = aggIterator->next();
+    aggIterator->close();
+    return result;
 }
 
-Aggregate::Aggregate(DbIterator *child, int afield, int gfield, Aggregator::Op aop): child(child), afield(afield), gfield(gfield), aop(aop) {
+Aggregate::Aggregate(DbIterator *child, int afield, int gfield, Aggregator::Op aop): child(child), afield(afield), gfield(gfield), aop(aop), agg(gfield, std::nullopt, afield, aop) {
     // TODO pa3.2: some code goes here
-
 }
 
 int Aggregate::groupField() {

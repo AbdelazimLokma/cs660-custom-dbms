@@ -7,7 +7,7 @@
 #include <db/Aggregator.h>
 #include <db/Operator.h>
 #include <db/DbIterator.h>
-
+#include <db/IntegerAggregator.h>
 namespace db {
     /**
      * The Aggregation operator that computes an aggregate (e.g., sum, avg, max,
@@ -19,7 +19,9 @@ namespace db {
         DbIterator *child; 
         int afield; 
         int gfield; 
-        Aggregator::Op aop; 
+        Aggregator::Op aop;
+        IntegerAggregator agg;
+
     protected:
         /**
          * Returns the next tuple. If there is a group by field, then the first
