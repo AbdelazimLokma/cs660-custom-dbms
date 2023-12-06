@@ -52,7 +52,6 @@ double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
         return selectivity;
     }
 
-}
 
 double IntHistogram::avgSelectivity() const {
     // TODO pa4.1: some code goes here
