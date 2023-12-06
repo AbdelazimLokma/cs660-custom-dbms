@@ -6,6 +6,10 @@ using namespace db;
 
 double JoinOptimizer::estimateJoinCost(int card1, int card2, double cost1, double cost2) {
     // TODO pa4.2: some code goes here
+    double read1 = cost1;
+    double read2 = card1 * cost2;
+    double cpuCost = static_cast<double>(card1) * card2;
+    return read1 + read2 + cpuCost;
 }
 
 int JoinOptimizer::estimateTableJoinCardinality(Predicate::Op joinOp,
