@@ -7,6 +7,7 @@ add_executable(pa3_test
         IntegerAggregator_test.cpp
         Filter_test.cpp
         Join_test.cpp
+        ../pa4/IntHistogram_test.cpp
 )
 
 target_link_libraries(pa3_test PRIVATE GTest::gtest_main db)
