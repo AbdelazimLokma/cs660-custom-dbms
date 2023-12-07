@@ -14,11 +14,32 @@ void IntHistogram::addValue(int v) {
 }
 
 double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
-    // TODO pa4.1: some code goes here
-    int index = (v - min) * buckets / (max - min + 1);
+    if (totalValues == 0) return 0.0;
+
+    if (v < min) {
+        if (op == Predicate::Op::LESS_THAN || op == Predicate::Op::LESS_THAN_OR_EQ) {
+            return 0.0;
+        } else {
+            return 1.0;
+        }
+    } else if (v > max) {
+        if (op == Predicate::Op::GREATER_THAN || op == Predicate::Op::GREATER_THAN_OR_EQ) {
+            return 0.0;
+        } else {
+            return 1.0;
+        }
+    }
+
+
+    int index = std::min(std::max((v - min) * buckets / (max - min + 1), 0), buckets - 1);
     double width = static_cast<double>(max - min + 1) / buckets;
+    double bucketStart = min + index * width;
+    double bucketEnd = bucketStart + width;
     double selectivity = 0.0;
-    switch (op){
+
+
+
+    switch (op) {
         case Predicate::Op::EQUALS:
             if (v < min || v > max) return 0.0;
             selectivity = static_cast<double>(bucketCount[index]) / width / totalValues;
@@ -28,29 +49,37 @@ double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
             selectivity = 1 - static_cast<double>(bucketCount[index]) / width / totalValues;
             break;
         case Predicate::Op::LESS_THAN:
-        case Predicate::Op::LESS_THAN_OR_EQ:
-            for (int i = 0; i < index; i++){
-                selectivity += static_cast<double>(bucketCount[i] / totalValues);
+        case Predicate::Op::LESS_THAN_OR_EQ: {
+            double bucketFraction = (v - bucketStart) / width;
+            if (op == Predicate::Op::LESS_THAN) {
+                selectivity += bucketFraction * static_cast<double>(bucketCount[index]) / totalValues;
+            } else {
+                bucketFraction = (v - bucketStart + 1) / width;
+                selectivity += bucketFraction * static_cast<double>(bucketCount[index]) / totalValues;
             }
-            if (op == Predicate::Op::LESS_THAN_OR_EQ){
-                double bucketFraction = (v - index * width) / width;
-                selectivity += bucketFraction * bucketCount[index] / totalValues;
-            }
-            break;
-        case Predicate::Op::GREATER_THAN:
-        case Predicate::Op::GREATER_THAN_OR_EQ:
-            for(int i = index + 1; i < buckets; i++){
-                selectivity += static_cast<double>(bucketCount[i] / totalValues);
-            }
-            if (op == Predicate::Op::GREATER_THAN_OR_EQ){
-                double bucketFraction = (width - (v - index * width)) / width;
-                selectivity += bucketFraction * bucketCount[index] / totalValues;
+            for (int i = 0; i < index; i++) {
+                selectivity += static_cast<double>(bucketCount[i]) / totalValues;
             }
             break;
-            }
+        }
 
-        return selectivity;
+        case Predicate::Op::GREATER_THAN:
+        case Predicate::Op::GREATER_THAN_OR_EQ: {
+            double bucketFraction = (bucketEnd - v) / width;
+            if (op == Predicate::Op::GREATER_THAN) {
+                selectivity += bucketFraction * static_cast<double>(bucketCount[index]) / totalValues;
+            } else {
+                bucketFraction = (bucketEnd - v + 1) / width;
+                selectivity += bucketFraction * static_cast<double>(bucketCount[index]) / totalValues;
+            }
+            for (int i = index + 1; i < buckets; i++) {
+                selectivity += static_cast<double>(bucketCount[i]) / totalValues;
+            }
+            break;
+        }
     }
+    return selectivity;
+}
 
 
 double IntHistogram::avgSelectivity() const {
