@@ -63,11 +63,11 @@ double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
         }
         case Predicate::Op::GREATER_THAN:
         case Predicate::Op::GREATER_THAN_OR_EQ: {
-            double bucketFraction = (bucketEnd - v) / width;
+            double bucketFraction = (bucketEnd - v - 1) / width;
             if (op == Predicate::Op::GREATER_THAN) {
                 selectivity += bucketFraction * static_cast<double>(bucketCount[index]) / totalValues;
             } else {
-                bucketFraction = (bucketEnd - v + 1) / width;
+                bucketFraction = (bucketEnd - v) / width;
                 selectivity += bucketFraction * static_cast<double>(bucketCount[index]) / totalValues;
             }
             for (int i = index + 1; i < buckets; i++) {

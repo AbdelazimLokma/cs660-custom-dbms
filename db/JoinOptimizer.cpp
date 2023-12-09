@@ -35,4 +35,5 @@ int JoinOptimizer::estimateTableJoinCardinality(Predicate::Op joinOp,
 std::vector<LogicalJoinNode> JoinOptimizer::orderJoins(std::unordered_map<std::string, TableStats> stats,
                                                        std::unordered_map<std::string, double> filterSelectivities) {
     // TODO pa4.3: some code goes here
+    
 }
