@@ -2,8 +2,10 @@
 
 using namespace db;
 
-IntHistogram::IntHistogram(int buckets, int min, int max): buckets(buckets), min(min), max(max), bucketCount(buckets, 0), totalValues(0) {
+IntHistogram::IntHistogram(int buckets, int min, int max): min(min), max(max), totalValues(0) {
     // TODO pa4.1: some code goes here
+    this->buckets = std::min(buckets, max - min + 1);
+    this->bucketCount.resize(this->buckets, 0);
 }
 
 void IntHistogram::addValue(int v) {
@@ -30,14 +32,11 @@ double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
         }
     }
 
-
     int index = std::min(std::max((v - min) * buckets / (max - min + 1), 0), buckets - 1);
-    double width = static_cast<double>(max - min + 1) / buckets;
+    double width = std::max(1.0, static_cast<double>(max - min + 1) / buckets);
     double bucketStart = min + index * width;
     double bucketEnd = bucketStart + width;
     double selectivity = 0.0;
-
-
 
     switch (op) {
         case Predicate::Op::EQUALS:
@@ -62,7 +61,6 @@ double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
             }
             break;
         }
-
         case Predicate::Op::GREATER_THAN:
         case Predicate::Op::GREATER_THAN_OR_EQ: {
             double bucketFraction = (bucketEnd - v) / width;

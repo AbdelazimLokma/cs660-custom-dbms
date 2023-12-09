@@ -8,6 +8,7 @@ add_executable(pa3_test
         Filter_test.cpp
         Join_test.cpp
         ../pa4/IntHistogram_test.cpp
+        ../pa4/JoinOptimizer_test.cpp
 )
 
 target_link_libraries(pa3_test PRIVATE GTest::gtest_main db)
