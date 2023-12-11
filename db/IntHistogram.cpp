@@ -1,5 +1,6 @@
 #include <db/IntHistogram.h>
 
+
 using namespace db;
 
 IntHistogram::IntHistogram(int buckets, int min, int max): min(min), max(max), totalValues(0) {
@@ -82,8 +83,10 @@ double IntHistogram::estimateSelectivity(Predicate::Op op, int v) const {
 
 double IntHistogram::avgSelectivity() const {
     // TODO pa4.1: some code goes here
+    return 0.0;
 }
 
 std::string IntHistogram::to_string() const {
     // TODO pa4.1: some code goes here
+    return "hi kostas";
 }

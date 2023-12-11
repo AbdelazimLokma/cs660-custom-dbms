@@ -2,7 +2,9 @@
 #include <db/HeapFile.h>
 #include <db/IntField.h>
 #include <db/IntHistogram.h>
+#include <vector>
 #include <db/Utility.h>
+
 
 void random_data(db::IntHistogram &hist) {
     std::vector values = {148, 171, 193, 135, 100, 124, 110, 132, 182, 165, 108, 189, 189, 153, 172, 191, 181, 122, 131,
