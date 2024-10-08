@@ -26,7 +26,7 @@ This repository contains four programming assignments focused on building a data
 ├── README.md                      # General description of the project (this file)
 ├── heapfile.dat                   # Heap file for testing purposes
 └── table.dat                      # Table file for testing purposes
-
+```
 
 
 
