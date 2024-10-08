@@ -5,7 +5,7 @@ This repository contains four programming assignments focused on building a data
 ## Project Structure
 
 
-.
+```
 ├── PA-3 Writeups/                 # Writeups for Programming Assignment 3
 ├── PA-4 WriteUp/                  # Writeups for Programming Assignment 4
 ├── db/                            # Main codebase for the assignments
